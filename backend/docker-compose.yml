@@ -1,0 +1,43 @@
+services:
+  db:
+    image: postgres:16
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_DB: bakalarka
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5455:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      bakalarka_net:
+        ipv4_address: 10.0.0.100
+
+  backend:
+    build: .
+    container_name: backend
+    restart: always
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://10.0.0.100:5432/bakalarka
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    ports:
+      - "80:8080"
+    volumes:
+      - ./pdf_output:/app/output
+    networks:
+      bakalarka_net:
+
+volumes:
+  postgres_data:
+
+networks:
+  bakalarka_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.0.0/24
