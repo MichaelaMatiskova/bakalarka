@@ -4,24 +4,20 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.tuke.bakalarka.api.CompetitorApi;
 import com.tuke.bakalarka.api.ScoreApi;
 import com.tuke.bakalarka.model.Competitor;
 import com.tuke.bakalarka.model.Score;
 import com.tuke.bakalarka.model.Station;
-
-import java.util.Arrays;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,9 +30,8 @@ public class ScoringActivity extends AppCompatActivity {
     private TextView name;
     private TextView surname;
     private TextView age;
-    private Spinner station_spinner;
-    private Spinner points_spinner;
-
+    private MaterialAutoCompleteTextView station_view;
+    private MaterialAutoCompleteTextView points_view;
     private int selectedPoint;
     private int selectedStation;
     private Competitor c;
@@ -51,8 +46,12 @@ public class ScoringActivity extends AppCompatActivity {
         name = findViewById(R.id.name);
         surname = findViewById(R.id.surname);
         age = findViewById(R.id.age);
-        station_spinner = findViewById(R.id.station);
-        points_spinner = findViewById(R.id.points);
+        station_view = findViewById(R.id.station_id);
+        points_view = findViewById(R.id.points);
+
+        points_view.setKeyListener(null);
+        station_view.setKeyListener(null);
+
         submit_btn = findViewById(R.id.submit_button);
 
         Bundle extras = getIntent().getExtras();
@@ -64,7 +63,7 @@ public class ScoringActivity extends AppCompatActivity {
         selectedStation = id_station.getId();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.10.19:80/api/competitors/")
+                .baseUrl("http://192.168.10.226:80/api/competitors/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -96,7 +95,7 @@ public class ScoringActivity extends AppCompatActivity {
         setSpinnerStation();
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.10.19:80/api/score/")
+                .baseUrl("http://192.168.10.226:80/api/score/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ScoreApi scoreApi = retrofit.create(ScoreApi.class);
@@ -152,39 +151,36 @@ public class ScoringActivity extends AppCompatActivity {
 
     private void setSpinnerPoints() {
         Integer[] points = {1,2,3,4,5};
-        ArrayAdapter<Integer> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, points);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        points_spinner.setAdapter(adapter);
 
-        points_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedPoint = points[position];
-            }
+        MaterialAutoCompleteTextView view = findViewById(R.id.points);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
+        ArrayAdapter<Integer> adapter =
+                new ArrayAdapter<>(this,
+                        android.R.layout.simple_list_item_1,
+                        points);
+
+        view.setAdapter(adapter);
+
+        view.setOnItemClickListener((parent, v, position, id) -> {
+            selectedPoint = points[position];
         });
     }
 
     private void setSpinnerStation() {
         Integer[] stations = {1,2,3,4,5,6,7,8,9,10};
-        ArrayAdapter<Integer> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, stations);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        station_spinner.setAdapter(adapter);
 
-        station_spinner.setSelection(selectedStation - 1);
+        MaterialAutoCompleteTextView view = findViewById(R.id.station_id);
 
-        station_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedStation = stations[position];
-            }
+        ArrayAdapter<Integer> adapter =
+                new ArrayAdapter<>(this,
+                        android.R.layout.simple_list_item_1,
+                        stations);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
+        view.setText(String.valueOf(selectedStation), false);
+        view.setAdapter(adapter);
+
+        view.setOnItemClickListener((parent, v, position, id) -> {
+            selectedStation = stations[position];
         });
     }
 }

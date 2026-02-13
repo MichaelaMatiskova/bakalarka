@@ -28,7 +28,7 @@ public class QRCodePDFGeneratorServiceJPA {
 
     public void generatePDFWithQRCodes(int count) throws Exception {
         Document document = new Document();
-        PdfWriter.getInstance(document, new FileOutputStream("/app/output/qr_codes.pdf"));
+        PdfWriter.getInstance(document, new FileOutputStream("/backend/output/qr_codes.pdf"));
         document.open();
 
         QRCode qrCode = new QRCode();

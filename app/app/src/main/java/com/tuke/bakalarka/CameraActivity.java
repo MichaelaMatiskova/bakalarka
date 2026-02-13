@@ -59,7 +59,7 @@ public class CameraActivity extends AppCompatActivity {
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.10.19:80/api/qrcode/")
+                .baseUrl("http://192.168.10.226:80/api/qrcode/")
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

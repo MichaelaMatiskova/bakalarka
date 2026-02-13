@@ -96,7 +96,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.10.19:80/api/competitors/")
+                .baseUrl("http://192.168.10.226:80/api/competitors/")
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
