@@ -18,6 +18,7 @@ import com.tuke.bakalarka.api.ScoreApi;
 import com.tuke.bakalarka.model.Competitor;
 import com.tuke.bakalarka.model.Score;
 import com.tuke.bakalarka.model.Station;
+import com.tuke.bakalarka.retrofit.RetrofitClient;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -62,10 +63,7 @@ public class ScoringActivity extends AppCompatActivity {
         StationId id_station = (StationId) getApplication();
         selectedStation = id_station.getId();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.10.226:80/api/competitors/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        Retrofit retrofit = RetrofitClient.getRetrofit();
 
         CompetitorApi api = retrofit.create(CompetitorApi.class);
         Call<Competitor> call = api.findById(scannedId);
@@ -94,10 +92,6 @@ public class ScoringActivity extends AppCompatActivity {
         setSpinnerPoints();
         setSpinnerStation();
 
-        retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.10.226:80/api/score/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
         ScoreApi scoreApi = retrofit.create(ScoreApi.class);
 
         submit_btn.setOnClickListener(new View.OnClickListener() {

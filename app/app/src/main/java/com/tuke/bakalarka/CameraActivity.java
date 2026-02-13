@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.tuke.bakalarka.api.QrCodeApi;
+import com.tuke.bakalarka.retrofit.RetrofitClient;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -58,12 +59,7 @@ public class CameraActivity extends AppCompatActivity {
                 .addInterceptor(logging)
                 .build();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.10.226:80/api/qrcode/")
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
+        Retrofit retrofit = RetrofitClient.getRetrofit();
         QrCodeApi api = retrofit.create(QrCodeApi.class);
         Call<Boolean> call = api.isUsed(scannedId);
 

@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.tuke.bakalarka.api.CompetitorApi;
 import com.tuke.bakalarka.model.Competitor;
+import com.tuke.bakalarka.retrofit.RetrofitClient;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -95,12 +96,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 .addInterceptor(logging)
                 .build();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.10.226:80/api/competitors/")
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
+        Retrofit retrofit = RetrofitClient.getRetrofit();
         CompetitorApi api = retrofit.create(CompetitorApi.class);
         Call<Competitor> call = api.register(competitor);
 

@@ -9,9 +9,9 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface CompetitorApi {
-    @POST("register")
+    @POST("api/competitors/register")
     Call<Competitor> register(@Body Competitor competitor);
-    @GET("findBy/{id}")
+    @GET("api/competitors/findBy/{id}")
     Call<Competitor> findById(@Path("id") String id);
 
 }
